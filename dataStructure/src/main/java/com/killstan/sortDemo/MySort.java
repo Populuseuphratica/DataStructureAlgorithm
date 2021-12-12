@@ -14,11 +14,11 @@ public class MySort {
 
     public static void main(String[] args) {
         MySort mySort = new MySort();
-//        int arr[] = {3, 9, -1, 10, 20, -1};
-        int arr[] = {4965556, 4346772, 2518358, 2405369, 5862936, 6514337, 2226242, 2175017};
+        int arr[] = {3, 9, -1, 10, 20, -1};
+//        int arr[] = {4965556, 4346772, 2518358, 2405369, 5862936, 6514337, 2226242, 2175017};
         //创建要给 80000 个的随机的数组
-        arr = new int[80000];
-        for (int i = 0; i < 80000; i++) {
+        arr = new int[80000000];
+        for (int i = 0; i < 80000000; i++) {
             arr[i] = (int) (Math.random() * 800000); //生成一个[0, 8000000) 数
         }
 //        System.out.println(Arrays.toString(arr));
@@ -31,8 +31,8 @@ public class MySort {
 //        mySort.selectSort(arr);
 //        mySort.insertSort(arr);
 //        mySort.shellSort(arr);
-        mySort.quickSort(arr, 0, arr.length - 1);
-//        sort(arr, 0, arr.length - 1);
+//        mySort.quickSort(arr, 0, arr.length - 1);
+        mySort.mergeSort(arr);
         for (int i = 0; i < arr.length - 1; i++) {
             if (arr[i + 1] < arr[i]) {
                 System.out.println("算法出错");
@@ -299,7 +299,7 @@ public class MySort {
                 array[right] = tempOnce;
             }
             //这时只会是right==left的情况
-            else{
+            else {
                 // 将基准值放在中间位
                 array[leftOriginal] = array[left];
                 array[left] = temp;
@@ -316,6 +316,109 @@ public class MySort {
         }
     }
 
+    /**
+     * 归并排序
+     *
+     * @param array 待排序数组
+     * @return 排序完成数组
+     */
+    public int[] mergeSort(int[] array) {
+        if (array == null || array.length == 0) {
+            throw new RuntimeException("空数组不能排序");
+        }
+        // 临时数组，用来存放合并后的数组。
+        int[] tempArr = new int[array.length];
+        mergeSortDivide(array, 0, array.length - 1, tempArr);
+        return array;
+    }
+
+    /**
+     * 归并数组的分
+     *
+     * @param array   待分的数组
+     * @param left    数组左下标
+     * @param right   数组右下标
+     * @param tempArr
+     */
+    private void mergeSortDivide(int[] array, int left, int right, int[] tempArr) {
+        // 如果有2个以上元素，就分
+        if (right > left) {
+            int middle = (right - left) / 2 + left;
+            // 左边的数组递归
+            mergeSortDivide(array, left, middle, tempArr);
+            // 右边的数组递归
+            mergeSortDivide(array, middle + 1, right, tempArr);
+
+            // 因为是递归调用，栈的先入后出，这里调用合，将这次分组完成的数组合起来。执行的时候是逆向的。
+            // 数组的合
+            mergeSortConquer(array, left, right, tempArr);
+        }
+    }
+
+    /**
+     * 数组的合
+     *
+     * @param array   待合并的数组（也是带排序的数组）
+     * @param left    待合并的数组的左下标
+     * @param right   待合并的数组的右下标
+     * @param tempArr
+     */
+    private void mergeSortConquer(int[] array, int left, int right, int[] tempArr) {
+
+        int middle = (right - left) / 2 + left;
+        // 待合并左边有序序列的开始下标
+        int leftPointer = left;
+
+        // 待合并右边有序序列的开始下标
+        int rightPointer = middle + 1;
+        int tempArrPointer = 0;
+
+        // 直到左右两边的有序序列，有一边处理完毕为止，将其按顺序填入临时数组
+        while (leftPointer <= middle && rightPointer <= right) {
+            // 对当前左右序列的元素，如果左边小于等于右边
+            if (array[leftPointer] <= array[rightPointer]) {
+                // 即将左边的元素，填充到 temp 数组
+                tempArr[tempArrPointer] = array[leftPointer];
+                tempArrPointer++;
+                leftPointer++;
+            } else {
+                //反之,将右边的元素，填充到 temp 数组
+                tempArr[tempArrPointer] = array[rightPointer];
+                tempArrPointer++;
+                rightPointer++;
+            }
+            // TODO 下面会数组越界，找原因。
+//            while (array[leftPointer] <= array[rightPointer] && middle >= leftPointer) {
+//                tempArr[tempArrPointer] = array[leftPointer];
+//                tempArrPointer++;
+//                leftPointer++;
+//            }
+//
+//            while (array[leftPointer] > array[rightPointer] && right >= rightPointer) {
+//                tempArr[tempArrPointer] = array[rightPointer];
+//                tempArrPointer++;
+//                rightPointer++;
+//            }
+        }
+
+        // 把有剩余数据的一边的数据依次全部填充到 temp 数组
+        while (leftPointer <= middle) {
+            tempArr[tempArrPointer] = array[leftPointer];
+            tempArrPointer++;
+            leftPointer++;
+        }
+        while (rightPointer <= right) {
+            tempArr[tempArrPointer] = array[rightPointer];
+            tempArrPointer++;
+            rightPointer++;
+        }
+
+        // 将 temp 数组的元素拷贝到待排序数组
+        tempArrPointer--;
+        while (tempArrPointer > -1) {
+            array[right--] = tempArr[tempArrPointer--];
+        }
+    }
 }
 
 
