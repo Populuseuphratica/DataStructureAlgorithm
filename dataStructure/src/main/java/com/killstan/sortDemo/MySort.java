@@ -14,7 +14,7 @@ public class MySort {
 
     public static void main(String[] args) {
         MySort mySort = new MySort();
-        int arr[] = {3, 9, -1, 10, 20, -1};
+        int arr[] = {3, 999, 10, 20, 11};
 //        int arr[] = {4965556, 4346772, 2518358, 2405369, 5862936, 6514337, 2226242, 2175017};
         //创建要给 80000 个的随机的数组
         arr = new int[80000000];
@@ -32,7 +32,8 @@ public class MySort {
 //        mySort.insertSort(arr);
 //        mySort.shellSort(arr);
 //        mySort.quickSort(arr, 0, arr.length - 1);
-        mySort.mergeSort(arr);
+//        mySort.mergeSort(arr);
+        mySort.radixSort(arr);
         for (int i = 0; i < arr.length - 1; i++) {
             if (arr[i + 1] < arr[i]) {
                 System.out.println("算法出错");
@@ -419,6 +420,49 @@ public class MySort {
         while (tempArrPointer > -1) {
             array[right--] = tempArr[tempArrPointer--];
         }
+    }
+
+    /**
+     * 基数排序（正数版）
+     *
+     * @param array
+     * @return
+     */
+    public int[] radixSort(int[] array) {
+        if (array == null || array.length < 2) {
+            return array;
+        }
+
+        // 定义桶，9行为0~9的基数（10应该写成常量），每一列用来存放数，第一列预留来表示当前行有几个有效数
+        int[][] bucket = new int[10][array.length + 1];
+        int max = 0;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+
+        int places = String.valueOf(max).length();
+        for (int i = 0; i < places; i++) {
+            for (int j = 0; j < array.length; j++) {
+                int num = array[j] / ((int) Math.pow(10, i)) % 10;
+                int numCount = bucket[num][0];
+                bucket[num][++numCount] = array[j];
+                bucket[num][0] = numCount;
+            }
+
+            int index = 0;
+            for (int j = 0; j < 10; j++) {
+                int numCount = bucket[j][0];
+                for (int k = 1; k <= numCount; k++) {
+                    array[index++] = bucket[j][k];
+                }
+                bucket[j][0] = 0;
+            }
+        }
+
+        return array;
+
     }
 }
 
