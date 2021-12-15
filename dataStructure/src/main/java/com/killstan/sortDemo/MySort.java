@@ -387,14 +387,15 @@ public class MySort {
                 tempArrPointer++;
                 rightPointer++;
             }
-            // TODO 下面会数组越界，找原因。
-//            while (array[leftPointer] <= array[rightPointer] && middle >= leftPointer) {
+
+            // 一开始的自己的想法，想复杂了，不用再套一层while
+//            while (middle >= leftPointer && array[leftPointer] <= array[rightPointer]) {
 //                tempArr[tempArrPointer] = array[leftPointer];
 //                tempArrPointer++;
 //                leftPointer++;
 //            }
-//
-//            while (array[leftPointer] > array[rightPointer] && right >= rightPointer) {
+//            // 如果是right >= rightPointer在后面，这样当rightPointer=right+1时，会先判断前面的array[leftPointer] > array[rightPointer]条件，出现数组越界错误
+//            while (right >= rightPointer && array[leftPointer] > array[rightPointer]) {
 //                tempArr[tempArrPointer] = array[rightPointer];
 //                tempArrPointer++;
 //                rightPointer++;
