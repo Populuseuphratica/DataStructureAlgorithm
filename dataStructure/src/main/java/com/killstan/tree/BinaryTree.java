@@ -24,15 +24,15 @@ public class BinaryTree {
         node3.left = node5;
         node3.right = node4;
 
-//        binaryTree.LRD(binaryTree.rootNode);
-        TreeNode treeNode = binaryTree.LRDSearch(binaryTree.rootNode, new TreeNode(3));
-        System.out.println(treeNode);
+
+        TreeNode treeNode1 = binaryTree.remove(binaryTree, new TreeNode(2));
+        System.out.println(treeNode1);
+        binaryTree.LRD(binaryTree.rootNode);
+//        TreeNode treeNode = binaryTree.LRDSearch(binaryTree.rootNode, new TreeNode(3));
+
+//        System.out.println(treeNode);
+
     }
-
-    public void add() {
-
-    }
-
 
     /**
      * 前序遍历
@@ -156,7 +156,7 @@ public class BinaryTree {
             result = LRDSearch(curNode.left, target);
         }
 
-        if(result!=null){
+        if (result != null) {
             return result;
         }
 
@@ -164,17 +164,70 @@ public class BinaryTree {
             result = LRDSearch(curNode.right, target);
         }
 
-        if(result!=null){
+        if (result != null) {
             return result;
         }
 
         System.out.println(curNode);
-        if(curNode.num == target.num){
+        if (curNode.num == target.num) {
             return curNode;
         }
 
         return result;
     }
+
+    /**
+     * 递归删除结点
+     * 1.如果删除的节点是叶子节点，则删除该节点
+     * 2.如果删除的节点是非叶子节点，则删除该子树
+     *
+     * @param binaryTree
+     * @param target
+     * @return 返回删除的节点。null:没找到要删除的节点
+     */
+    public TreeNode remove(BinaryTree binaryTree, TreeNode target) {
+        TreeNode curNode = binaryTree.rootNode;
+        if (curNode == null) {
+            System.out.println("空树不能进行删除操作");
+            return null;
+        }
+
+        if (curNode.num == target.num) {
+            binaryTree.rootNode = null;
+            return curNode;
+        }
+
+        return removeRecursion(curNode, target);
+    }
+
+    private TreeNode removeRecursion(TreeNode curNode, TreeNode target) {
+        TreeNode returnNode = null;
+        if (curNode.left != null) {
+            if (curNode.left.num == target.num) {
+                returnNode = curNode.left;
+                curNode.left = null;
+                return returnNode;
+            }
+            returnNode = removeRecursion(curNode.left, target);
+        }
+
+        if (returnNode != null) {
+            return returnNode;
+        }
+
+        if (curNode.right != null) {
+            if (curNode.right.num == target.num) {
+                returnNode = curNode.right;
+                curNode.right = null;
+                return returnNode;
+            }
+            returnNode = removeRecursion(curNode.right, target);
+        }
+
+        return returnNode;
+    }
+
+
 }
 
 /**
