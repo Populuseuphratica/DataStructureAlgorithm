@@ -57,7 +57,9 @@ public class BinarySortTree {
                     parentNode.right = null;
                 }
             }
+
             // 左右子树都存在的情况，用删除节点的直接前驱或者直接后继来替换当前节点（这里用直接后继）
+            // 这里采用替换节点方法，也可以删除调用deleteDetailBak方法直接删除后继节点，然后后继节点的值覆盖删除节点的值
             else if (curNode.left != null && curNode.right != null) {
                 BSTNode childNode = curNode.right;
                 // 用来记录最小节点的父节点
